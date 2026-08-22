@@ -99516,4 +99516,7 @@ const playersData = [
     "name": "Sean Olvera-Harle",
     "first_name": "Sean",
     "last_name": "Olvera-Harle",
-    "team": "Hawai'i
+    "team": "Hawai'i",
+    "position": "ATH"
+  }
+];
