@@ -1078,6 +1078,10 @@ init();
             document.getElementById("graphicTitleInput").value = `${docWeek} Player Rankings`;
             document.getElementById("graphicTitleDisplay").textContent = `${docWeek} Player Rankings`;
             Object.assign(rankings, data.rankings);
+            if (currentMode === 'rankings') {
+                const maxKey = Math.max(...Object.keys(data.rankings).map(Number).filter(n => !isNaN(n)));
+                if (maxKey > 10) setCount(maxKey);
+            }
             renderRankList();
             renderGraphic();
         }
