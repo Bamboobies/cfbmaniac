@@ -901,7 +901,7 @@ function saveModalPlayer() {
       name: name,
       team: t,
       position: p
-    });
+    };
   } else {
     const player = playersData.find(p => p.id == pId);
     if (player) {
@@ -1052,7 +1052,7 @@ init();
   
   const cfbWeek = getCurrentCFBWeek();
   document.getElementById("graphicTitleInput").value = `${cfbWeek} Player Rankings`;
-  document.getElementById("graphicTitleDisplay").textContent = `${cfbWeek} Player Rankings`;
+  document.getElementById("capTitle").textContent = `${cfbWeek} Player Rankings`;
 
   let isInitialLoad = true;
   initAuth(async (user) => {
@@ -1076,7 +1076,7 @@ init();
         if (data && data.rankings) {
             const docWeek = loadId.split('_').slice(1).join(' ').replace(/_/g, ' ') || cfbWeek;
             document.getElementById("graphicTitleInput").value = `${docWeek} Player Rankings`;
-            document.getElementById("graphicTitleDisplay").textContent = `${docWeek} Player Rankings`;
+            document.getElementById("capTitle").textContent = `${docWeek} Player Rankings`;
             Object.assign(rankings, data.rankings);
             if (currentMode === 'rankings') {
                 const maxKey = Math.max(...Object.keys(data.rankings).map(Number).filter(n => !isNaN(n)));
