@@ -1,0 +1,78 @@
+{
+  "week": 0,
+  "generatedAt": "2026-08-21T23:47:58.771Z",
+  "games": [
+    {
+      "id": "North Carolina-TCU",
+      "away": "North Carolina",
+      "home": "TCU",
+      "date": "2026-08-29T16:00Z",
+      "details": "TCU -7.5",
+      "homeSpread": -7.5,
+      "awaySpread": 7.5
+    },
+    {
+      "id": "San José State-USC",
+      "away": "San José State",
+      "home": "USC",
+      "date": "2026-08-29T19:00Z",
+      "details": "USC -38.5",
+      "homeSpread": -38.5,
+      "awaySpread": 38.5
+    },
+    {
+      "id": "NC State-Virginia",
+      "away": "NC State",
+      "home": "Virginia",
+      "date": "2026-08-29T19:30Z",
+      "details": "UVA -5.5",
+      "homeSpread": -5.5,
+      "awaySpread": 5.5
+    },
+    {
+      "id": "Jacksonville State-North Dakota State",
+      "away": "Jacksonville State",
+      "home": "North Dakota State",
+      "date": "2026-08-29T21:30Z",
+      "details": "NDSU -7",
+      "homeSpread": -7,
+      "awaySpread": 7
+    },
+    {
+      "id": "Eastern Michigan-Sacramento State",
+      "away": "Sacramento State",
+      "home": "Eastern Michigan",
+      "date": "2026-08-29T22:30Z",
+      "details": "EMU -8.5",
+      "homeSpread": -8.5,
+      "awaySpread": 8.5
+    },
+    {
+      "id": "Florida State-New Mexico State",
+      "away": "New Mexico State",
+      "home": "Florida State",
+      "date": "2026-08-29T23:00Z",
+      "details": "FSU -31.5",
+      "homeSpread": -31.5,
+      "awaySpread": 31.5
+    },
+    {
+      "id": "Hawai'i-Stanford",
+      "away": "Hawai'i",
+      "home": "Stanford",
+      "date": "2026-08-29T23:00Z",
+      "details": "STAN -5.5",
+      "homeSpread": -5.5,
+      "awaySpread": 5.5
+    },
+    {
+      "id": "Memphis-UNLV",
+      "away": "Memphis",
+      "home": "UNLV",
+      "date": "2026-08-30T02:00Z",
+      "details": "UNLV -5.5",
+      "homeSpread": -5.5,
+      "awaySpread": 5.5
+    }
+  ]
+}

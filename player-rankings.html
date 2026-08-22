@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9V4VJ9S75G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9V4VJ9S75G');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1150">
+<title>CFB Maniac | 2026 College Football Player Rankings</title>
+<meta name="description" content="Rank college football players across teams and positions for the 2026 season. Create a custom Top 10 or Top 25 player rankings board, generate a clean graphic, download, and share your predictions.">
+<meta name="author" content="Loagan Lancaster">
+<meta property="og:title" content="CFB Maniac | 2026 Player Rankings">
+<meta property="og:description" content="Rank college football players across teams and positions for the 2026 season. Generate your custom Top 10 or Top 25 player rankings board.">
+<meta property="og:image" content="https://cfbmaniac.com/social-banner.jpg">
+<meta property="og:url" content="https://cfbmaniac.com/player-rankings.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="teams.js"></script>
+<script src="players.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Graduate&family=Outfit:wght@400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    background: #0a0a0a;
+    background-image: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    color: #ffffff;
+    padding: 20px 16px 50px;
+    min-height: 100vh;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+  .cfb-logo {
+    text-align: center;
+    font-family: 'Graduate', 'Impact', sans-serif;
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #fef08a 0%, #fbbf24 45%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 12px rgba(251, 191, 36, 0.2);
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .logo-link:hover .cfb-logo {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+  }
+  .subtitle { text-align: center; color: #a1a1aa; margin-bottom: 18px; font-size: 0.9rem; }
+
+  .nav-links {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    background: #1a1a1a;
+    color: #a1a1aa;
+    border: 1px solid #3f3f46;
+    padding: 9px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover {
+    background: #27272a;
+    color: #fff;
+    border-color: #71717a;
+  }
+  .nav-btn.active {
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    border-color: #fbbf24;
+    color: #000;
+    font-weight: 700;
+  }
+
+  .top-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .title-edit-wrap {
+    max-width: 420px;
+    margin: 24px auto 14px;
+    text-align: center;
+    padding: 0 12px;
+  }
+  .title-edit-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fbbf24;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .graphic-title-input {
+    background: #141414;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .graphic-title-input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+  }
+  .graphic-title-input::placeholder {
+    color: #71717a;
+    font-weight: 400;
+  }
+
+  .controls {
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 24px; align-items: center;
+  }
+  button, .toggle-btn {
+    background: #1a1a1a; color: #fff; border: 1px solid #3f3f46;
+    padding: 9px 16px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+  }
+  button:hover, .toggle-btn:hover { background: #27272a; }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    border-color: #fbbf24;
+    color: #000;
+  }
+  button.download {
+    background: #27272a; border: 1px solid #52525b;
+  }
+  button.download:hover { background: #3f3f46; }
+  button.share {
+    background: linear-gradient(135deg, #fde68a, #fbbf24, #f59e0b);
+    border: none; color: #000; font-weight: 700;
+  }
+  button.share:hover { filter: brightness(1.1); }
+  button.share:disabled { opacity: 0.7; cursor: not-allowed; }
+  .sort-label { color: #71717a; font-size: 0.8rem; }
+
+  .main-section {
+    background: #141414; border: 1px solid #3f3f46;
+    padding: 18px; margin-bottom: 28px; max-width: 420px;
+    margin-left: auto; margin-right: auto;
+  }
+  .main-section h2 {
+    text-align: center; margin-bottom: 14px; font-size: 1rem;
+    font-weight: 600; color: #fbbf24;
+  }
+
+  .team-select-wrap {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .team-select-wrap select {
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    min-width: 260px;
+  }
+  .team-select-wrap select:focus {
+    outline: none;
+    border-color: #fbbf24;
+  }
+
+  .record-bar {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fbbf24;
+    margin: 12px 0 14px;
+    min-height: 1.6em;
+  }
+
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .game-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    padding: 6px 8px;
+  }
+  .game-date {
+    font-size: 0.68rem;
+    color: #a1a1aa;
+    width: 54px;
+    flex-shrink: 0;
+  }
+  .pred-btns {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .pred-btns button {
+    padding: 4px 8px;
+    font-size: 0.70rem;
+    min-width: 30px;
+  }
+  .pred-btns button.win.active {
+    background: #166534;
+    border-color: #22c55e;
+    color: #fff;
+  }
+  .pred-btns button.loss.active {
+    background: #7f1d1d;
+    border-color: #ef4444;
+    color: #fff;
+  }
+
+  .score-pair {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .score-pair span {
+    color: #71717a;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .score-num {
+    width: 28px;
+    background: #141414;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    font-size: 0.72rem;
+    padding: 3px 2px;
+    text-align: center;
+  }
+  .score-num:focus {
+    outline: none;
+    border-color: #fbbf24;
+  }
+
+  .game-opp {
+    flex: 1;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  /* Capture graphic */
+  #captureArea {
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    padding: 16px 12px 12px;
+    max-width: 290px;
+    margin: 28px auto 0;
+    display: none;
+  }
+  #captureArea .cap-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #captureArea .cap-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  #captureArea .cap-record {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  #captureArea .cap-team {
+    font-size: 0.80rem;
+    color: #a1a1aa;
+    margin-top: 1px;
+  }
+  #captureArea .cap-games {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #captureArea .cap-game {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 7px;
+    background: #141414;
+    border: 1px solid #3f3f46;
+  }
+  #captureArea .cap-result {
+    font-size: 0.62rem;
+    font-weight: 700;
+    width: 22px;
+    text-align: center;
+    border-radius: 2px;
+    padding: 2px 0;
+    flex-shrink: 0;
+  }
+  #captureArea .cap-result.W { background: #166534; color: #fff; }
+  #captureArea .cap-result.L { background: #7f1d1d; color: #fff; }
+  #captureArea .cap-result.none { background: #27272a; color: #71717a; }
+  #captureArea .cap-score {
+    font-size: 0.70rem;
+    color: #e4e4e7;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 36px;
+  }
+  #captureArea .cap-opp {
+    flex: 1;
+    font-size: 0.74rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  #captureArea .cap-footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: #a1a1aa;
+    font-weight: 500;
+  }
+
+  .seo-footer {
+    max-width: 420px;
+    margin: 40px auto 10px auto;
+    padding: 24px;
+    border-top: 1px solid #3f3f46;
+    color: #71717a;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .seo-footer h3 {
+    color: #a1a1aa;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  #toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #fbbf24;
+    color: #000;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    bottom: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  #toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+
+  .awards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .awards-grid > div {
+    flex: 1 1 100%;
+  }
+  @media (min-width: 650px) {
+    .awards-grid > div {
+      flex: 1 1 calc(50% - 4px);
+    }
+  }
+</style>
+</head>
+
+
+
+<body>
+
+  <a href="index.html" class="logo-link">
+    <h1 class="cfb-logo">CFB MANIAC</h1>
+  </a>
+  <p class="subtitle">Player Rankings</p>
+
+    <div class="nav-links">
+    <a href="index.html" class="nav-btn">Playoff Bracket</a>
+    <a href="index.html?mode=top25" class="nav-btn">Top 25</a>
+    <a href="conference.html" class="nav-btn">Conference Rankings</a>
+    <a href="schedule.html" class="nav-btn">Record Predictor</a>
+    <a href="player-rankings.html" class="nav-btn active">Player Rankings</a>
+  </div>
+
+  
+  <div class="controls" style="margin-bottom: 12px; justify-content: center;">
+    <button class="toggle-btn active" id="btnModeRankings" onclick="setMode('rankings')" style="font-size:1.1rem; padding:10px 24px;">Player Rankings</button>
+    <button class="toggle-btn" id="btnModeAwards" onclick="setMode('awards')" style="font-size:1.1rem; padding:10px 24px;">Award Predictions</button>
+  </div>
+  <div class="controls" id="countControls">
+    <span class="sort-label">Count</span>
+    <button class="toggle-btn active" id="btnTop10" onclick="setCount(10)">Top 10</button>
+    <button class="toggle-btn" id="btnTop25" onclick="setCount(25)">Top 25</button>
+    <button class="toggle-btn" id="btnCustomCount" onclick="promptCustomCount()">Custom</button>
+    <button onclick="fillSampleQBs()" id="btnSampleQBs">Sample Top 10 QBs</button>
+    <button onclick="resetRankings()">Reset</button>
+  </div>
+
+  <div class="title-edit-wrap">
+    <label class="title-edit-label">Graphic Title</label>
+    <input type="text" id="graphicTitleInput" class="graphic-title-input" value="Top 10 Players" oninput="onGraphicTitleChange()" placeholder="e.g., Top 10 Quarterbacks">
+  </div>
+
+  <div id="listWrapper" class="main-section" style="max-width: 600px; margin: 0 auto 30px;">
+    <div id="rankList" style="display:flex; flex-direction:column; gap:8px;">
+      <!-- Ranks injected here -->
+    </div>
+  </div>
+
+  <!-- Capture Graphic -->
+  <div id="captureArea" class="graphic-container" style="display:block; max-width: 600px; background: #111; border-radius: 16px; padding: 30px; position: relative; overflow: hidden; margin: 0 auto; border: 1px solid #27272a;">
+    <div style="text-align: center; margin-bottom: 25px; position: relative; z-index: 2;">
+      <div id="capTitle" style="font-family: 'Graduate', sans-serif; font-size: 1.8rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.05em;">Top 10 Players</div>
+      <div style="font-size: 1rem; color: #a1a1aa; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.1em;">2026 Season</div>
+    </div>
+    <div id="capRanks" style="display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 2;">
+      <!-- Graphic ranks injected here -->
+    </div>
+    <div style="position: absolute; bottom: 15px; right: 20px; font-family: 'Graduate', sans-serif; color: rgba(255,255,255,0.1); font-size: 1.2rem; z-index: 2;">CFB MANIAC</div>
+  </div>
+
+  <div id="shareContainer" data-html2canvas-ignore="true" style="display:flex; justify-content:center; gap:16px; margin-top:24px; margin-bottom:20px;">
+    <button class="download" onclick="downloadGraphic()" style="padding:12px 28px; font-size:1.05rem;">Download Image</button>
+    <button class="share" id="btnShare" onclick="shareList()" style="padding:12px 28px; font-size:1.05rem;">Share to Social</button>
+    <button class="share" id="btnSave" style="padding:12px 28px; font-size:1.05rem;">Save to Profile</button>
+    
+  </div>
+
+  <div id="toast">Share link copied to clipboard!</div>
+
+  <div id="shareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#141414; border:1px solid #3f3f46; padding:24px; max-width:450px; width:90%; text-align:center;">
+      <h3 style="color:#fbbf24; margin-bottom:12px; font-size:1.3rem;">Ready to Share!</h3>
+      <p style="font-size:0.9rem; margin-bottom:20px; color:#a1a1aa;">The link has been copied to your clipboard!</p>
+      <label style="display:block; text-align:left; font-size:0.8rem; color:#71717a; margin-bottom:6px; font-weight:600;">Custom Share Link:</label>
+      <input type="text" id="shareSiteLink" style="width:100%; padding:10px; margin-bottom:24px; background:#0a0a0a; border:1px solid #3f3f46; color:#fff; font-size:0.85rem;" readonly onclick="this.select()">
+      <button onclick="document.getElementById('shareModal').style.display='none'" style="background:#27272a; border:1px solid #3f3f46; color:#fff; width:100%; padding:10px; font-weight:600; cursor:pointer;">Close</button>
+    </div>
+  </div>
+
+  <!-- Player Modal -->
+  <div id="playerModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; padding:16px;">
+    <div style="background:#141414; padding:24px; border-radius:12px; width:100%; max-width:450px; border:1px solid #3f3f46; box-shadow:0 20px 40px rgba(0,0,0,0.8);">
+      <h3 style="margin-bottom:20px; font-size:1.2rem; color:#fff;">Select Player for <span id="modalRankNum"></span></h3>
+      
+      <select id="modalTeam" onchange="updateModalPlayers()" style="width:100%; padding:12px; margin-bottom:15px; border-radius:4px; background:#0a0a0a; color:#fff; border:1px solid #3f3f46; font-family:'Outfit',sans-serif;">
+        <option value="">-- All Teams --</option>
+      </select>
+      
+      <select id="modalPos" onchange="updateModalPlayers()" style="width:100%; padding:12px; margin-bottom:15px; border-radius:4px; background:#0a0a0a; color:#fff; border:1px solid #3f3f46; font-family:'Outfit',sans-serif;">
+        <option value="">-- All Positions --</option>
+        <option value="QB">QB</option>
+        <option value="RB">RB</option>
+        <option value="WR">WR</option>
+        <option value="TE">TE</option>
+        <option value="OL">OL</option>
+        <option value="DL">DL</option>
+        <option value="LB">LB</option>
+        <option value="DB">DB</option>
+        <option value="K">K</option>
+        <option value="P">P</option>
+        <option value="ATH">ATH</option>
+        <option value="HC">HC</option>
+      </select>
+      <input type="text" id="modalSearch" oninput="updateModalPlayers()" placeholder="Search player name or type custom..." style="width:100%; padding:12px; margin-bottom:15px; border-radius:4px; background:#0a0a0a; color:#fff; border:1px solid #3f3f46; font-family:'Outfit',sans-serif;">
+      
+      <select id="modalPlayer" style="width:100%; padding:12px; margin-bottom:15px; border-radius:4px; background:#0a0a0a; color:#fff; border:1px solid #3f3f46; font-family:'Outfit',sans-serif;">
+        <option value="">-- Select a Player --</option>
+      </select>
+      
+      <div style="display:flex; gap:10px; margin-top:10px;">
+        <button style="flex:1; background:#fbbf24; color:#000; font-weight:700; border:none; padding:10px; border-radius:4px; cursor:pointer;" onclick="saveModalPlayer()">Confirm</button>
+        <button style="flex:1; background:#27272a; color:#fff; border:1px solid #52525b; font-weight:600; padding:10px; border-radius:4px; cursor:pointer;" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+
+const IMGBB_API_KEY = "61215c09312e6a46816a8308158d24f4";
+let rankCount = 10;
+let rankings = {}; // slotIndex -> playerObject
+let currentEditingSlot = -1;
+let currentMode = 'rankings';
+const awardsList = [
+  { id: "heisman", name: "Heisman Memorial Trophy", desc: "Outstanding player of the year" },
+  { id: "maxwell", name: "Maxwell Award", desc: "Player of the year" },
+  { id: "walter_camp", name: "Walter Camp Award", desc: "Nation's top player" },
+  { id: "davey_obrien", name: "Davey O'Brien Award", desc: "Best quarterback" },
+  { id: "doak_walker", name: "Doak Walker Award", desc: "Premier running back" },
+  { id: "biletnikoff", name: "Fred Biletnikoff Award", desc: "Most outstanding receiver" },
+  { id: "mackey", name: "John Mackey Award", desc: "Outstanding tight end" },
+  { id: "outland", name: "Outland Trophy", desc: "Most outstanding interior lineman" },
+  { id: "rimington", name: "Rimington Trophy", desc: "Best center" },
+  { id: "bednarik", name: "Chuck Bednarik Award", desc: "Defensive player of the year" },
+  { id: "nagurski", name: "Bronko Nagurski Trophy", desc: "Defensive player of the year" },
+  { id: "butkus", name: "Dick Butkus Award", desc: "Best linebacker" },
+  { id: "thorpe", name: "Jim Thorpe Award", desc: "Best defensive back" },
+  { id: "groza", name: "Lou Groza Award", desc: "Outstanding place-kicker" },
+  { id: "ray_guy", name: "Ray Guy Award", desc: "Best collegiate punter" },
+  { id: "coach_home_depot", name: "Coach of the Year (Home Depot / Eddie Robinson)", desc: "National coach of the year" },
+  { id: "broyles", name: "Frank Broyles Award", desc: "Top assistant coach" },
+  { id: "burlsworth", name: "Burlsworth Trophy", desc: "Top walk-on" },
+  { id: "wuerffel", name: "Wuerffel Trophy", desc: "Community service" }
+];
+
+
+function getPlayerName(p) {
+  if (p.name) return p.name;
+  if (p.first_name && p.last_name) return `${p.first_name} ${p.last_name}`;
+  return "Unknown Player";
+}
+
+function init() {
+  populateTeamDropdown();
+  setCount(10);
+  restoreFromURL();
+}
+
+function onGraphicTitleChange() {
+  const val = document.getElementById("graphicTitleInput").value.trim();
+  document.getElementById("capTitle").textContent = val || "Player Rankings";
+}
+
+function promptCustomCount() {
+  const val = prompt("Enter number of players to rank (1-100):", "50");
+  if (!val) return;
+  const num = parseInt(val, 10);
+  if (!isNaN(num) && num > 0 && num <= 100) {
+    setCount(num);
+  } else {
+    alert("Please enter a valid number between 1 and 100.");
+  }
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById("btnModeRankings").classList.toggle("active", mode === 'rankings');
+  document.getElementById("btnModeAwards").classList.toggle("active", mode === 'awards');
+  
+  document.getElementById("countControls").style.display = mode === 'rankings' ? "flex" : "none";
+  
+  const captureArea = document.getElementById("captureArea");
+  if (captureArea) {
+    captureArea.style.maxWidth = mode === 'awards' ? "900px" : "600px";
+  }
+  
+  const listWrapper = document.getElementById("listWrapper");
+  if (listWrapper) {
+    listWrapper.style.maxWidth = mode === 'awards' ? "900px" : "600px";
+  }
+  
+  const rankList = document.getElementById("rankList");
+  if (rankList) {
+    if (mode === 'awards') {
+      rankList.classList.add("awards-grid");
+      rankList.style.display = "";
+      rankList.style.flexDirection = "";
+    } else {
+      rankList.classList.remove("awards-grid");
+      rankList.style.display = "flex";
+      rankList.style.flexDirection = "column";
+    }
+  }
+  
+  document.getElementById("btnTop10").classList.toggle("active", mode === 'rankings' && rankCount === 10);
+  document.getElementById("btnTop25").classList.toggle("active", mode === 'rankings' && rankCount === 25);
+  document.getElementById("btnCustomCount").classList.toggle("active", mode === 'rankings' && rankCount !== 10 && rankCount !== 25);
+  
+  const cr = document.getElementById("capRanks");
+  if (cr) {
+    if (mode === 'rankings' && rankCount >= 25) cr.classList.add("count-25");
+    else cr.classList.remove("count-25");
+  }
+
+  if (mode === 'awards') {
+    document.getElementById("graphicTitleInput").value = "2026 Award Predictions";
+  } else {
+    document.getElementById("graphicTitleInput").value = "Top " + rankCount + " Players";
+  }
+  onGraphicTitleChange();
+
+  renderRankList();
+  renderGraphic();
+}
+
+function setCount(num) {
+  rankCount = num;
+  const newRankings = {};
+  for (let i = 1; i <= num; i++) {
+    if (rankings[i]) newRankings[i] = rankings[i];
+  }
+  rankings = newRankings;
+  setMode('rankings');
+}
+
+function resetRankings() {
+  rankings = {};
+  renderRankList();
+  renderGraphic();
+}
+
+function renderRankList() {
+  const list = document.getElementById("rankList");
+  list.innerHTML = "";
+  
+  const count = currentMode === 'awards' ? awardsList.length : rankCount;
+  
+  for (let i = 1; i <= count; i++) {
+    const player = rankings[i];
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.alignItems = "center";
+    row.style.background = "#0a0a0a";
+    row.style.border = "1px solid #3f3f46";
+    row.style.borderRadius = "4px";
+    row.style.padding = "10px 15px";
+    row.style.gap = "15px";
+    
+    let btnContent = "Tap to select player...";
+    let colorStyle = "color: #a1a1aa;";
+    
+    if (player) {
+      colorStyle = "color: #fff; font-weight: 600;";
+      const tColor = player.team && teamColors[player.team] ? teamColors[player.team] : "#52525b";
+      const pName = getPlayerName(player);
+      btnContent = `
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="width:12px; height:12px; border-radius:50%; background:${tColor};"></div>
+            <span>${pName} <span style="opacity:0.6;font-size:0.85em;font-weight:400;">(${player.position})</span></span>
+          </div>
+          <div style="font-size:0.85em; font-weight:400; opacity:0.8;">${player.team}</div>
+        </div>
+      `;
+    }
+    
+    const label = currentMode === 'awards' ? 
+      `<div style="font-family:'Graduate',sans-serif; font-size:0.85rem; color:#fbbf24; width:120px; text-align:right; line-height:1.2;">${awardsList[i-1].name}</div>` : 
+      `<div style="font-family:'Graduate',sans-serif; font-size:1.2rem; color:#fbbf24; width:30px; text-align:right;">${i}</div>`;
+      
+    row.innerHTML = `
+      ${label}
+      <button style="flex:1; background:transparent; border:none; ${colorStyle} cursor:pointer; text-align:left; font-family:'Outfit',sans-serif; font-size:0.95rem;" onclick="openModal(${i})">${btnContent}</button>
+    `;
+    list.appendChild(row);
+  }
+  
+  if (currentMode === 'awards') {
+    const watermark = document.createElement("div");
+    watermark.style.display = "flex";
+    watermark.style.alignItems = "center";
+    watermark.style.justifyContent = "center";
+    watermark.style.background = "#0a0a0a";
+    watermark.style.border = "1px dashed #3f3f46";
+    watermark.style.borderRadius = "4px";
+    watermark.style.padding = "10px 15px";
+    watermark.style.color = "#71717a";
+    watermark.style.fontFamily = "'Outfit', sans-serif";
+    watermark.style.fontSize = "0.95rem";
+    watermark.innerHTML = "Make your predictions at <strong style='color:#fbbf24; margin-left:5px;'>CFBManiac.com</strong>";
+    list.appendChild(watermark);
+  }
+}
+
+function renderGraphic() {
+  const container = document.getElementById("capRanks");
+  container.innerHTML = "";
+  
+  if (currentMode === 'awards') {
+    container.classList.add("awards-grid");
+    container.style.display = "";
+    container.style.flexDirection = "";
+  } else {
+    container.classList.remove("awards-grid");
+    container.style.display = "flex";
+    container.style.flexDirection = "column";
+  }
+  
+  const count = currentMode === 'awards' ? awardsList.length : rankCount;
+  
+  for (let i = 1; i <= count; i++) {
+    const player = rankings[i];
+    const div = document.createElement("div");
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.background = "rgba(255,255,255,0.03)";
+    div.style.padding = currentMode === 'awards' ? "8px 15px" : "10px 20px";
+    div.style.borderRadius = "8px";
+    div.style.borderLeft = "4px solid #3f3f46";
+    
+    if (player) {
+      const tColor = player.team && teamColors[player.team] ? teamColors[player.team] : "#52525b";
+      div.style.borderLeftColor = tColor;
+      const pName = getPlayerName(player);
+      
+      if (currentMode === 'awards') {
+        div.innerHTML = `
+          <div style="flex:1; padding-right: 10px;">
+            <div style="font-size:0.65rem; color:#fbbf24; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">${awardsList[i-1].name}</div>
+            <div style="font-size:1.05rem; font-weight:600;">${pName}</div>
+          </div>
+          <div style="font-size:0.8rem; color:#a1a1aa; text-align:right;">${player.position !== 'N/A' ? player.position + ' | ' : ''}${player.team !== 'N/A' ? player.team : ''}</div>
+        `;
+      } else {
+        div.innerHTML = `
+          <div style="font-family:'Graduate',sans-serif; font-size:1.4rem; color:#52525b; width:40px;">${i}</div>
+          <div style="flex:1; font-size:1.1rem; font-weight:600;">${pName}</div>
+          <div style="font-size:0.9rem; color:#a1a1aa; text-align:right;">${player.position} | ${player.team}</div>
+        `;
+      }
+    } else {
+      if (currentMode === 'awards') {
+        div.innerHTML = `
+          <div style="flex:1;">
+            <div style="font-size:0.65rem; color:#52525b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px;">${awardsList[i-1].name}</div>
+            <div style="font-size:1.05rem; font-weight:600; color:#52525b;">—</div>
+          </div>
+        `;
+      } else {
+        div.innerHTML = `
+          <div style="font-family:'Graduate',sans-serif; font-size:1.4rem; color:#52525b; width:40px;">${i}</div>
+          <div style="flex:1; font-size:1.1rem; font-weight:600; color:#52525b;">—</div>
+        `;
+      }
+    }
+    container.appendChild(div);
+  }
+  
+  if (currentMode === 'awards') {
+    const watermark = document.createElement("div");
+    watermark.style.display = "flex";
+    watermark.style.alignItems = "center";
+    watermark.style.justifyContent = "center";
+    watermark.style.background = "rgba(255,255,255,0.02)";
+    watermark.style.padding = "8px 15px";
+    watermark.style.borderRadius = "8px";
+    watermark.style.border = "1px dashed #3f3f46";
+    watermark.style.color = "#71717a";
+    watermark.style.fontFamily = "'Outfit', sans-serif";
+    watermark.style.fontSize = "0.95rem";
+    watermark.innerHTML = "Make your predictions at <strong style='color:#fbbf24; margin-left:5px;'>CFBManiac.com</strong>";
+    container.appendChild(watermark);
+  }
+  
+}
+
+function populateTeamDropdown() {
+  const sel = document.getElementById("modalTeam");
+  const confs = {};
+  teamsData.forEach(t => {
+    if (!confs[t.conference]) confs[t.conference] = [];
+    confs[t.conference].push(t.name);
+  });
+  
+  Object.keys(confs).sort().forEach(conf => {
+    const og = document.createElement("optgroup");
+    og.label = conf;
+    confs[conf].sort().forEach(tName => {
+      const opt = document.createElement("option");
+      opt.value = tName;
+      opt.textContent = tName;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function openModal(slotIdx) {
+  currentEditingSlot = slotIdx;
+  document.getElementById("modalSearch").value = "";
+  
+  if (currentMode === 'awards') {
+    document.getElementById("modalRankNum").textContent = awardsList[slotIdx-1].name;
+  } else {
+    document.getElementById("modalRankNum").textContent = "#" + slotIdx;
+  }
+  
+  const existing = rankings[slotIdx];
+  if (existing) {
+    document.getElementById("modalTeam").value = existing.team !== "N/A" ? existing.team : "";
+    document.getElementById("modalPos").value = existing.position !== "N/A" ? existing.position : "";
+  } else {
+    document.getElementById("modalTeam").value = "";
+    document.getElementById("modalPos").value = "";
+  }
+  
+  updateModalPlayers();
+  if (existing) {
+    document.getElementById("modalPlayer").value = existing.isCustom ? ("CUSTOM:" + existing.name) : existing.id;
+  }
+  
+  document.getElementById("playerModal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("playerModal").style.display = "none";
+}
+
+function updateModalPlayers() {
+  const t = document.getElementById("modalTeam").value;
+  const p = document.getElementById("modalPos").value;
+  const s = document.getElementById("modalSearch").value.trim().toLowerCase();
+  const sel = document.getElementById("modalPlayer");
+  
+  sel.innerHTML = '<option value="">-- Select a Player --</option>';
+  
+  let filtered = playersData;
+  if (t) filtered = filtered.filter(player => player.team === t);
+  if (p) filtered = filtered.filter(player => player.position === p);
+  if (s) filtered = filtered.filter(player => getPlayerName(player).toLowerCase().includes(s));
+  
+  filtered.sort((a,b) => getPlayerName(a).localeCompare(getPlayerName(b))).forEach(player => {
+    const opt = document.createElement("option");
+    opt.value = player.id;
+    opt.textContent = `${getPlayerName(player)} (${player.position}) - ${player.team}`;
+    sel.appendChild(opt);
+  });
+
+  if (s) {
+    const customOpt = document.createElement("option");
+    customOpt.value = "CUSTOM:" + document.getElementById("modalSearch").value.trim();
+    customOpt.textContent = `Use Custom: "${document.getElementById("modalSearch").value.trim()}"`;
+    sel.appendChild(customOpt);
+  }
+}
+
+function saveModalPlayer() {
+  const pId = document.getElementById("modalPlayer").value;
+  if (!pId) {
+    delete rankings[currentEditingSlot];
+  } else if (pId.startsWith("CUSTOM:")) {
+    const name = pId.substring(7);
+    const t = document.getElementById("modalTeam").value || "N/A";
+    const p = document.getElementById("modalPos").value || "N/A";
+    rankings[currentEditingSlot] = {
+      isCustom: true,
+      name: name,
+      team: t,
+      position: p
+    });
+  } else {
+    const player = playersData.find(p => p.id == pId);
+    if (player) {
+      rankings[currentEditingSlot] = player;
+    }
+  }
+  closeModal();
+  renderRankList();
+  renderGraphic();
+}
+
+function fillSampleQBs() {
+  setCount(10);
+  document.getElementById("graphicTitleInput").value = "Top 10 Quarterbacks";
+  onGraphicTitleChange();
+  
+  const qbs = playersData.filter(p => p.position === "QB").slice(0, 10);
+  rankings = {};
+  qbs.forEach((qb, idx) => {
+    rankings[idx + 1] = qb;
+  });
+  
+  renderRankList();
+  renderGraphic();
+}
+
+function downloadGraphic() {
+  const area = document.getElementById("captureArea");
+  html2canvas(area, {
+    backgroundColor: "#111",
+    scale: 2,
+    useCORS: true,
+    windowWidth: 1200,
+    windowHeight: area.scrollHeight + 200,
+    scrollY: -window.scrollY
+  }).then(canvas => {
+    const link = document.createElement("a");
+    const title = document.getElementById("graphicTitleInput").value.trim() || "Rankings";
+    link.download = `${title.replace(/\s+/g, "_")}_CFBManiac.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+
+async function shareList() {
+  const btn = document.getElementById("btnShare");
+  btn.disabled = true;
+  btn.textContent = "Uploading...";
+  try {
+    const area = document.getElementById("captureArea");
+    const canvas = await html2canvas(area, {
+    backgroundColor: "#111",
+    scale: 2,
+    useCORS: true,
+    windowWidth: 1200,
+    windowHeight: area.scrollHeight + 200,
+    scrollY: -window.scrollY
+  });
+    const targetWidth = Math.max(canvas.width, canvas.height * (1200 / 630));
+    const paddedCanvas = document.createElement("canvas");
+    paddedCanvas.width = targetWidth;
+    paddedCanvas.height = canvas.height;
+    const ctx = paddedCanvas.getContext("2d");
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, targetWidth, canvas.height);
+    const offsetX = (targetWidth - canvas.width) / 2;
+    ctx.drawImage(canvas, offsetX, 0);
+    const blob = await new Promise(r => paddedCanvas.toBlob(r, "image/png"));
+    const form = new FormData();
+    form.append("image", blob);
+    const uploadRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: "POST",
+      body: form
+    });
+    const uploadData = await uploadRes.json();
+    if (!uploadData.success) throw new Error("ImgBB upload failed");
+    
+    const imgUrl = uploadData.data.url;
+    const params = new URLSearchParams();
+    
+    const predStr = Object.entries(rankings)
+      .map(([i, r]) => `${i}:${r.id}`)
+      .join(",");
+    if (predStr) params.set("r", predStr);
+    
+    const title = document.getElementById("graphicTitleInput").value.trim();
+    if (title) params.set("t", title);
+    params.set("c", rankCount);
+    
+    params.set("img_url", imgUrl.replace("https://i.ibb.co/", "").replace(".png", ""));
+    
+    const shareLink = `${window.location.origin}/player-rankings.html?${params.toString()}`;
+    await navigator.clipboard.writeText(shareLink);
+    document.getElementById("shareSiteLink").value = shareLink;
+    document.getElementById("shareModal").style.display = "flex";
+    
+    const toast = document.getElementById("toast");
+    toast.className = "show";
+    setTimeout(() => toast.className = "", 3000);
+  } catch (err) {
+    console.error(err);
+    alert("Share failed. Please try again.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Share to Social";
+  }
+}
+
+function restoreFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const r = params.get("r");
+  const t = params.get("t");
+  const c = params.get("c");
+  
+  if (t) {
+    document.getElementById("graphicTitleInput").value = t;
+    onGraphicTitleChange();
+  }
+  if (c) {
+    setCount(parseInt(c, 10));
+  }
+  
+  if (r) {
+    r.split(",").forEach(part => {
+      const [slotStr, pIdStr] = part.split(":");
+      const slot = parseInt(slotStr, 10);
+      const pId = pIdStr;
+      if (!isNaN(slot) && pId) {
+        // match id loosely since it might be a string or int from the backend
+        const player = playersData.find(p => p.id == pId);
+        if (player) {
+          rankings[slot] = player;
+        }
+      }
+    });
+    renderRankList();
+    renderGraphic();
+  }
+}
+
+init();
+</script>
+
+
+<script type="module">
+  import { initAuth, loadFromProfile, saveToProfile } from './src/global-auth.js';
+  import { getCurrentCFBWeek } from './src/week-calculator.js';
+  
+  const cfbWeek = getCurrentCFBWeek();
+  document.getElementById("graphicTitleInput").value = `${cfbWeek} Player Rankings`;
+  document.getElementById("graphicTitleDisplay").textContent = `${cfbWeek} Player Rankings`;
+
+  let isInitialLoad = true;
+  initAuth(async (user) => {
+    if (user && isInitialLoad) {
+      isInitialLoad = false;
+      const urlParams = new URLSearchParams(window.location.search);
+      let loadId = urlParams.get('loadId');
+      
+      if (!loadId && !urlParams.has('r')) {
+         const safeWeek = cfbWeek.replace(/ /g, '_');
+         loadId = `player-rankings_${safeWeek}`;
+      }
+
+      if (loadId) {
+        const data = await loadFromProfile(loadId);
+        if (data && data.rankings) {
+            const docWeek = loadId.split('_').slice(1).join(' ').replace(/_/g, ' ') || cfbWeek;
+            document.getElementById("graphicTitleInput").value = `${docWeek} Player Rankings`;
+            document.getElementById("graphicTitleDisplay").textContent = `${docWeek} Player Rankings`;
+            Object.assign(rankings, data.rankings);
+            renderRankList();
+            renderGraphic();
+        }
+      }
+    }
+  });
+
+  document.getElementById("btnSave").addEventListener("click", () => {
+    saveToProfile("player-rankings", {
+      rankings: rankings
+    });
+  });
+</script>
+</body>
+</html>

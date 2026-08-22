@@ -1,0 +1,6 @@
+{
+  "name": "CFB Maniac",
+  "description": "College football playoff bracket maker, 2026 conference rankings, and schedule predictor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1150">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Graduate&family=Outfit:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      background-image: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+      background-size: 100% 100%;
+      background-attachment: fixed;
+      color: #ffffff;
+      padding: 20px 16px 50px;
+      min-height: 100vh;
+    }
+    .logo-link {
+      text-decoration: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    .cfb-logo {
+      text-align: center;
+      font-family: 'Graduate', 'Impact', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #fef08a 0%, #fbbf24 45%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 25px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: #1a1a1a;
+      color: #a1a1aa;
+      border: 1px solid #3f3f46;
+      padding: 9px 18px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .nav-btn:hover {
+      background: #27272a;
+      color: #fff;
+      border-color: #71717a;
+    }
+    .nav-btn.active {
+      background: linear-gradient(135deg, #fde68a, #fbbf24);
+      border-color: #fbbf24;
+      color: #000;
+      font-weight: 700;
+    }
+    .title-edit-wrap {
+      max-width: 420px;
+      margin: 24px auto 14px;
+      text-align: center;
+      padding: 0 12px;
+    }
+    .title-edit-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #a1a1aa;
+      margin-bottom: 6px;
+    }
+    .graphic-title-input {
+      background: #141414;
+      border: 1px solid #3f3f46;
+      color: #fff;
+      padding: 10px 16px;
+      font-size: 0.98rem;
+      font-weight: 500;
+      width: 100%;
+      border-radius: 6px;
+      outline: none;
+      text-align: center;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .graphic-title-input:focus {
+      outline: none;
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+    }
+    .graphic-title-input::placeholder {
+      color: #71717a;
+      font-weight: 400;
+    }
+    button.download { background: #27272a; border: 1px solid #52525b; }
+    button.download:hover { background: #3f3f46; }
+    button.share {
+      background: linear-gradient(135deg, #fde68a, #fbbf24, #f59e0b);
+      border: none; color: #000; font-weight: 700;
+    }
+    button.share:hover { filter: brightness(1.1); }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 30px;
+    }
+    .btn {
+      display: inline-block;
+      background: #fbbf24;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #f59e0b; }
+    .btn-secondary {
+      background: #3f3f46;
+      color: #fff;
+    }
+    .btn-secondary:hover { background: #52525b; }
+    .auth-section { text-align: center; padding: 40px 0; }
+    .dashboard { display: none; }
+    .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .profile-info { display: flex; align-items: center; gap: 15px; }
+    .profile-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fbbf24; }
+  </style>
+  
+</head>
+<body>
+  <a href="index.html" class="logo-link">
+    <h1 class="cfb-logo">CFB MANIAC</h1>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="nav-btn">Playoff Bracket</a>
+    <a href="index.html?mode=top25" class="nav-btn">Top 25</a>
+    <a href="conference.html" class="nav-btn">Conference Rankings</a>
+    <a href="schedule.html" class="nav-btn">Record Predictor</a>
+    <a href="player-rankings.html" class="nav-btn">Player Rankings</a>
+    <a href="predictions.html" class="nav-btn active">Weekly Predictions</a>
+  </div>
+
+  <div class="container">
+    <div id="header-unauth" class="header-row" style="display: flex;">
+      <div>
+        <h2 style="margin-bottom: 5px;">Weekly Predictions</h2>
+        <p style="color: #a1a1aa; font-size: 0.9rem;">Sign in to save your picks and compete on the leaderboard.</p>
+      </div>
+      <div>
+        <button id="loginBtn" class="btn">Sign in with Google</button>
+      </div>
+    </div>
+    
+    <div id="header-auth" class="header-row" style="display: none;">
+      <div class="profile-info" style="cursor: pointer;" onclick="openUserProfile()">
+        <img id="userAvatar" class="profile-img" src="" alt="Profile">
+        <div>
+          <div id="userName" style="font-weight: 600;"></div>
+          <div id="userScore" style="color: #fbbf24; font-size: 0.9rem;">ELO: 500</div>
+        </div>
+      </div>
+      <div>
+        <a href="/leaderboard.html" class="btn btn-secondary" style="text-decoration: none; display: inline-block; margin-right: 10px;">Leaderboard</a>
+        <button id="logoutBtn" class="btn btn-secondary">Sign Out</button>
+      </div>
+    </div>
+    
+    <div id="dashboard" class="dashboard" style="display: block;">
+      <div id="week0-section" style="margin-top: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #27272a; padding-bottom: 10px; margin-bottom: 20px;">
+          <h3 style="color: #fbbf24; font-size: 1.2rem;">Week 0 Matchups</h3>
+          <span id="saveStatus" style="font-size: 0.85rem; color: #a1a1aa;">Make your picks!</span>
+        </div>
+        <div id="games-container" style="display: flex; flex-direction: column; gap: 15px;"></div>
+        
+        <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+          <button id="savePicksBtn" class="btn" style="flex: 1;">Save Picks</button>
+          
+          <div style="flex: 1; display: flex; gap: 10px; background: #0a0a0a; border: 1px solid #27272a; border-radius: 6px; padding: 10px; min-width: 300px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+              <label for="graphicCount" style="color: #a1a1aa; font-size: 0.9rem; white-space: nowrap;">Graphic Size:</label>
+              <select id="graphicCount" style="background: #141414; color: #fff; border: 1px solid #3f3f46; border-radius: 4px; padding: 8px; flex: 1; outline: none;">
+                <option value="4">4 Picks</option>
+                <option value="6">6 Picks</option>
+                <option value="8" selected>8 Picks</option>
+                <option value="10">10 Picks</option>
+                <option value="all">All Picks</option>
+              </select>
+            </div>
+            <button id="generateGraphicBtn" class="btn btn-secondary" style="flex: 1;">Create Graphic</button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="graphic-result-section" style="display: none; margin-top: 30px; border-top: 1px solid #27272a; padding-top: 20px; text-align: center;">
+        <h3 style="margin-bottom: 15px; color: #fbbf24;">Your Predictions Graphic</h3>
+        
+        <div class="title-edit-wrap">
+          <label class="title-edit-label" for="graphicTitleInput">Customize Title</label>
+          <input type="text" class="graphic-title-input" id="graphicTitleInput" placeholder="Enter graphic title..." maxlength="50">
+        </div>
+
+        <p id="graphic-promo" style="color: #a1a1aa; font-size: 1rem; margin-bottom: 15px; display: none; background: #141414; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46;">Want to compete on the leaderboard? <a href="#" id="promoLoginLink" style="color: #fbbf24; text-decoration: none; font-weight: 600;">Login to save your picks!</a></p>
+        <div style="background: #000; display: inline-block; padding: 10px; border-radius: 8px; border: 1px solid #27272a; max-width: 100%; overflow: hidden;">
+          <img id="graphic-preview" src="" style="max-width: 100%; border-radius: 4px;">
+        </div>
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 20px;">
+          <button id="downloadGraphicBtn" class="btn download" style="padding:12px 28px; font-size:1.05rem; border-radius:4px;">Download Image</button>
+          <button id="shareGraphicBtn" class="btn share" style="padding:12px 28px; font-size:1.05rem; border-radius:4px;">Share to Social</button>
+        </div>
+      </div>
+      
+      <!-- Off-screen container for rendering the graphic -->
+      <div id="graphic-render-container" style="position: absolute; top: -9999px; left: -9999px; background: #0a0a0a; background-image: linear-gradient(180deg, #111 0%, #0a0a0a 100%); color: #fff; width: 1080px; padding: 40px; font-family: 'Outfit', sans-serif;">
+        <div style="text-align: center; margin-bottom: 40px; position: relative;">
+          <h2 id="graphic-title" style="font-size: 3rem; color: #fbbf24; margin-top: 10px;">My Week Picks</h2>
+        </div>
+        <div id="graphic-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 40px;">
+        </div>
+        <div style="text-align: right; margin-top: 20px; color: rgba(255, 255, 255, 0.3); font-size: 1.4rem; font-weight: 600; padding-right: 20px; font-family: 'Graduate', sans-serif;">
+          cfbmaniac.com
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="teams.js"></script>
+  <!-- Username Setup Modal -->
+  <div id="username-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center;">
+    <div class="modal-content" style="background: #141414; border: 1px solid #27272a; border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; color: #fff; text-align: center;">
+      <h3 style="font-size: 1.5rem; color: #fbbf24; margin-bottom: 10px;">Choose a Username</h3>
+      <p style="color: #a1a1aa; font-size: 0.9rem; margin-bottom: 20px;">Welcome! Please set a unique username to appear on the leaderboard.</p>
+      <input type="text" id="username-input" placeholder="Enter username..." style="width: 100%; padding: 12px 15px; border-radius: 6px; border: 1px solid #3f3f46; background: #0a0a0a; color: #fff; margin-bottom: 15px; font-size: 1rem; outline: none;">
+      <div id="username-error" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 15px; display: none;">Username is already taken.</div>
+      <button id="save-username-btn" class="btn" style="width: 100%;">Save Username</button>
+    </div>
+  </div>
+
+  <!-- User Profile Modal -->
+  <div id="user-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+    <div class="modal-content" style="background: #141414; border: 1px solid #27272a; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; color: #fff; position: relative;">
+      <span class="close-modal" onclick="closeModal()" style="position: absolute; top: 15px; right: 15px; font-size: 1.5rem; color: #a1a1aa; cursor: pointer;">&times;</span>
+      <div class="modal-header" style="text-align: center; margin-bottom: 25px;">
+        <img id="modal-avatar" src="" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fbbf24; margin-bottom: 10px;">
+        <h3 id="modal-name" style="font-size: 1.5rem;">User Name</h3>
+      </div>
+      <div class="modal-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+        <div class="stat-box" style="background: #0a0a0a; border: 1px solid #27272a; border-radius: 8px; padding: 15px; text-align: center;">
+          <div class="stat-label" style="color: #a1a1aa; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">ELO Rating</div>
+          <div class="stat-value" id="modal-elo" style="font-size: 1.5rem; font-weight: 700; color: #fbbf24;">--</div>
+        </div>
+        <div class="stat-box" style="background: #0a0a0a; border: 1px solid #27272a; border-radius: 8px; padding: 15px; text-align: center;">
+          <div class="stat-label" style="color: #a1a1aa; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Win Rate</div>
+          <div class="stat-value" id="modal-winrate" style="font-size: 1.5rem; font-weight: 700; color: #fbbf24;">--%</div>
+        </div>
+        <div class="stat-box" style="background: #0a0a0a; border: 1px solid #27272a; border-radius: 8px; padding: 15px; text-align: center;">
+          <div class="stat-label" style="color: #a1a1aa; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">All-Time Rank</div>
+          <div class="stat-value" id="modal-rank" style="font-size: 1.5rem; font-weight: 700; color: #fbbf24;">--</div>
+        </div>
+        <div class="stat-box" style="background: #0a0a0a; border: 1px solid #27272a; border-radius: 8px; padding: 15px; text-align: center;">
+          <div class="stat-label" style="color: #a1a1aa; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px;">Season Rank</div>
+          <div class="stat-value" id="modal-season-rank" style="font-size: 1.5rem; font-weight: 700; color: #fbbf24;">--</div>
+        </div>
+      </div>
+      <div id="past-predictions-container" style="border-top: 1px solid #27272a; padding-top: 20px; margin-top: 10px;">
+        <h4 style="margin-bottom: 10px; color: #a1a1aa;">Past Predictions</h4>
+        <div id="past-predictions-list" style="font-size: 0.9rem; color: #71717a; text-align: center; background: #0a0a0a; padding: 15px; border-radius: 8px;">No past predictions yet. Check back after Week 0!</div>
+      </div>
+      <div id="saved-creations-container" style="border-top: 1px solid #27272a; padding-top: 20px; margin-top: 10px;">
+        <h4 style="margin-bottom: 10px; color: #a1a1aa;">Saved Creations</h4>
+        <div id="saved-creations-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+          <div style="color: #71717a; text-align: center; background: #0a0a0a; padding: 15px; border-radius: 8px; grid-column: span 2;">Loading saved items...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/predictions-init.js"></script>
+</body>
+</html>

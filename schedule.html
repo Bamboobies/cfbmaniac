@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9V4VJ9S75G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9V4VJ9S75G');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1150">
+
+<title>CFB Maniac | 2026 Schedule & Record Predictor</title>
+<meta name="description" content="Predict any FBS team's 2026 schedule and record. Pick wins and losses, optionally add scores, generate a clean graphic, download or share your predictions.">
+<meta name="author" content="Loagan Lancaster">
+
+<meta property="og:title" content="CFB Maniac | 2026 Schedule & Record Predictor">
+<meta property="og:description" content="Predict any FBS team's full 2026 schedule and record, then share your results.">
+<meta property="og:image" content="https://cfbmaniac.com/social-banner.jpg">
+<meta property="og:url" content="https://cfbmaniac.com/schedule.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="teams.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Graduate&family=Outfit:wght@400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    background: #0a0a0a;
+    background-image: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+    background-size: 100% 100%;
+    background-attachment: fixed;
+    color: #ffffff;
+    padding: 20px 16px 50px;
+    min-height: 100vh;
+  }
+
+  .logo-link {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+  .cfb-logo {
+    text-align: center;
+    font-family: 'Graduate', 'Impact', sans-serif;
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #fef08a 0%, #fbbf24 45%, #d97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 12px rgba(251, 191, 36, 0.2);
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .logo-link:hover .cfb-logo {
+    filter: brightness(1.15);
+    transform: scale(1.02);
+  }
+  .subtitle { text-align: center; color: #a1a1aa; margin-bottom: 18px; font-size: 0.9rem; }
+
+  .nav-links {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    background: #1a1a1a;
+    color: #a1a1aa;
+    border: 1px solid #3f3f46;
+    padding: 9px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88rem;
+    font-family: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover {
+    background: #27272a;
+    color: #fff;
+    border-color: #71717a;
+  }
+  .nav-btn.active {
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    border-color: #fbbf24;
+    color: #000;
+    font-weight: 700;
+  }
+
+  .top-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .title-edit-wrap {
+    max-width: 420px;
+    margin: 24px auto 14px;
+    text-align: center;
+    padding: 0 12px;
+  }
+  .title-edit-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fbbf24;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .graphic-title-input {
+    background: #141414;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .graphic-title-input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+  }
+  .graphic-title-input::placeholder {
+    color: #71717a;
+    font-weight: 400;
+  }
+
+  .controls {
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 24px; align-items: center;
+  }
+  button, .toggle-btn {
+    background: #1a1a1a; color: #fff; border: 1px solid #3f3f46;
+    padding: 9px 16px; cursor: pointer; font-weight: 600; font-size: 0.85rem;
+  }
+  button:hover, .toggle-btn:hover { background: #27272a; }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #fde68a, #fbbf24);
+    border-color: #fbbf24;
+    color: #000;
+  }
+  button.download {
+    background: #27272a; border: 1px solid #52525b;
+  }
+  button.download:hover { background: #3f3f46; }
+  button.share {
+    background: linear-gradient(135deg, #fde68a, #fbbf24, #f59e0b);
+    border: none; color: #000; font-weight: 700;
+  }
+  button.share:hover { filter: brightness(1.1); }
+  button.share:disabled { opacity: 0.7; cursor: not-allowed; }
+  .sort-label { color: #71717a; font-size: 0.8rem; }
+
+  .main-section {
+    background: #141414; border: 1px solid #3f3f46;
+    padding: 18px; margin-bottom: 28px; max-width: 420px;
+    margin-left: auto; margin-right: auto;
+  }
+  .main-section h2 {
+    text-align: center; margin-bottom: 14px; font-size: 1rem;
+    font-weight: 600; color: #fbbf24;
+  }
+
+  .team-select-wrap {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .team-select-wrap select {
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    min-width: 260px;
+  }
+  .team-select-wrap select:focus {
+    outline: none;
+    border-color: #fbbf24;
+  }
+
+  .record-bar {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fbbf24;
+    margin: 12px 0 14px;
+    min-height: 1.6em;
+  }
+
+  .game-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .game-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    padding: 6px 8px;
+  }
+  .game-date {
+    font-size: 0.68rem;
+    color: #a1a1aa;
+    width: 54px;
+    flex-shrink: 0;
+  }
+  .pred-btns {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .pred-btns button {
+    padding: 4px 8px;
+    font-size: 0.70rem;
+    min-width: 30px;
+  }
+  .pred-btns button.win.active {
+    background: #166534;
+    border-color: #22c55e;
+    color: #fff;
+  }
+  .pred-btns button.loss.active {
+    background: #7f1d1d;
+    border-color: #ef4444;
+    color: #fff;
+  }
+
+  .score-pair {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .score-pair span {
+    color: #71717a;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .score-num {
+    width: 28px;
+    background: #141414;
+    border: 1px solid #3f3f46;
+    color: #fff;
+    font-size: 0.72rem;
+    padding: 3px 2px;
+    text-align: center;
+  }
+  .score-num:focus {
+    outline: none;
+    border-color: #fbbf24;
+  }
+
+  .game-opp {
+    flex: 1;
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  /* Capture graphic */
+  #captureArea {
+    background: #0a0a0a;
+    border: 1px solid #3f3f46;
+    padding: 16px 12px 12px;
+    max-width: 290px;
+    margin: 28px auto 0;
+    display: none;
+  }
+  #captureArea .cap-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #captureArea .cap-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  #captureArea .cap-record {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  #captureArea .cap-team {
+    font-size: 0.80rem;
+    color: #a1a1aa;
+    margin-top: 1px;
+  }
+  #captureArea .cap-games {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #captureArea .cap-game {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 7px;
+    background: #141414;
+    border: 1px solid #3f3f46;
+  }
+  #captureArea .cap-result {
+    font-size: 0.62rem;
+    font-weight: 700;
+    width: 22px;
+    text-align: center;
+    border-radius: 2px;
+    padding: 2px 0;
+    flex-shrink: 0;
+  }
+  #captureArea .cap-result.W { background: #166534; color: #fff; }
+  #captureArea .cap-result.L { background: #7f1d1d; color: #fff; }
+  #captureArea .cap-result.none { background: #27272a; color: #71717a; }
+  #captureArea .cap-score {
+    font-size: 0.70rem;
+    color: #e4e4e7;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 36px;
+  }
+  #captureArea .cap-opp {
+    flex: 1;
+    font-size: 0.74rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  #captureArea .cap-footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: #a1a1aa;
+    font-weight: 500;
+  }
+
+  .seo-footer {
+    max-width: 420px;
+    margin: 40px auto 10px auto;
+    padding: 24px;
+    border-top: 1px solid #3f3f46;
+    color: #71717a;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .seo-footer h3 {
+    color: #a1a1aa;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  #toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #fbbf24;
+    color: #000;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    bottom: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  #toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+  }
+  @keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+</style>
+</head>
+
+
+
+<body>
+
+  <a href="index.html" class="logo-link">
+    <h1 class="cfb-logo">CFB MANIAC</h1>
+  </a>
+  <p class="subtitle">2026 Schedule & Record Predictor</p>
+
+  <div class="nav-links">
+    <a href="index.html" class="nav-btn">Playoff Bracket</a>
+    <a href="index.html?mode=top25" class="nav-btn">Top 25</a>
+    <a href="conference.html" class="nav-btn">Conference Rankings</a>
+    <a href="schedule.html" class="nav-btn active">Record Predictor</a>
+    <a href="player-rankings.html" class="nav-btn">Player Rankings</a>
+  </div>
+
+  <div class="controls">
+    <span class="sort-label">Sort</span>
+    <button class="toggle-btn active" id="btnFPI" onclick="setSort('fpi')">FPI</button>
+    <button class="toggle-btn" id="btnAlpha" onclick="setSort('alpha')">A–Z</button>
+    <button onclick="resetPredictions()">Reset</button>
+    <button id="btnSample" onclick="fillSample()" style="display:none;">Sample</button>
+    <button class="toggle-btn" id="btnScores" onclick="toggleScores()">Score Predictions</button>
+  </div>
+
+  <div class="main-section">
+    <h2>Select a Team</h2>
+    <div class="team-select-wrap">
+      <select id="teamSelect" onchange="onTeamChange()">
+        <option value="">— Choose a Team —</option>
+      </select>
+    </div>
+
+    <div id="scheduleArea" style="display:none;">
+      <div class="record-bar" id="recordBar">0-0</div>
+      <div class="game-list" id="gameList"></div>
+    </div>
+  </div>
+
+  <!-- Title Edit Input (appears right above the graphic) -->
+  <div class="title-edit-wrap" id="titleEditWrap" style="display:none;">
+    <label class="title-edit-label" for="graphicTitleInput">Graphic Title</label>
+    <input type="text" class="graphic-title-input" id="graphicTitleInput" value="My Record Prediction" placeholder="Enter graphic title..." maxlength="50" oninput="onGraphicTitleChange()">
+  </div>
+
+  <!-- Capture area -->
+  <div id="captureArea">
+    <div class="cap-header">
+      <div class="cap-title" id="capTitle">My 2026 Record Prediction</div>
+      <div class="cap-record" id="capRecord">0-0</div>
+      <div class="cap-team" id="capTeam"></div>
+    </div>
+    <div class="cap-games" id="capGames"></div>
+    <div class="cap-footer">Make your prediction at cfbmaniac.com</div>
+  </div>
+
+  <div id="shareContainer" data-html2canvas-ignore="true" style="display:none; justify-content:center; gap:16px; margin-top:24px; margin-bottom:20px;">
+    <button class="download" onclick="downloadSchedule()" style="padding:12px 28px; font-size:1.05rem;">Download Image</button>
+    <button class="share" id="btnShare" onclick="shareSchedule()" style="padding:12px 28px; font-size:1.05rem;">Share to Social</button>
+    <button class="share" id="btnSave" style="padding:12px 28px; font-size:1.05rem;">Save to Profile</button>
+    
+  </div>
+
+  <footer class="seo-footer">
+    <h3>About Schedule & Record Predictions</h3>
+    <p>Predict the full 2026 season for any FBS team. Mark each game as a win or loss, optionally add final scores, generate a clean graphic with your predicted record, download it, or share it with friends.</p>
+  </footer>
+
+  <div id="toast">Share link copied to clipboard!</div>
+
+  <div id="shareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center;">
+    <div style="background:#141414; border:1px solid #3f3f46; padding:24px; max-width:450px; width:90%; text-align:center;">
+      <h3 style="color:#fbbf24; margin-bottom:12px; font-size:1.3rem;">Ready to Share!</h3>
+      <p style="font-size:0.9rem; margin-bottom:20px; color:#a1a1aa;">The link has been copied to your clipboard!</p>
+      <label style="display:block; text-align:left; font-size:0.8rem; color:#71717a; margin-bottom:6px; font-weight:600;">Custom Share Link:</label>
+      <input type="text" id="shareSiteLink" style="width:100%; padding:10px; margin-bottom:24px; background:#0a0a0a; border:1px solid #3f3f46; color:#fff; font-size:0.85rem;" readonly onclick="this.select()">
+      <button onclick="document.getElementById('shareModal').style.display='none'" style="background:#27272a; border:1px solid #3f3f46; color:#fff; width:100%; padding:10px; font-weight:600; cursor:pointer;">Close</button>
+    </div>
+  </div>
+
+<script>
+const IMGBB_API_KEY = "61215c09312e6a46816a8308158d24f4";
+
+let currentSort = "fpi";
+let currentTeam = "";
+let games = [];
+let predictions = {};   // index → "W" | "L"
+let scores = {};        // index → "24-21"
+let showScores = false;
+
+function onGraphicTitleChange() {
+  const inputVal = document.getElementById("graphicTitleInput").value.trim();
+  document.getElementById("capTitle").textContent = inputVal || "My Record Prediction";
+}
+
+function setSort(mode) {
+  currentSort = mode;
+  document.getElementById("btnFPI").classList.toggle("active", mode === "fpi");
+  document.getElementById("btnAlpha").classList.toggle("active", mode === "alpha");
+  populateTeamSelect();
+}
+
+function getSortedTeams() {
+  return currentSort === "alpha"
+    ? [...teamsByFPI].sort((a, b) => a.localeCompare(b))
+    : teamsByFPI;
+}
+
+function populateTeamSelect() {
+  const sel = document.getElementById("teamSelect");
+  const selected = sel.value || currentTeam;
+  sel.innerHTML = '<option value="">— Choose a Team —</option>';
+  getSortedTeams().forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    sel.appendChild(opt);
+  });
+  if (selected) {
+    sel.value = selected;
+  }
+}
+
+function getFpiRank(teamName) {
+  if (!teamName) return 9999;
+  const clean = teamName.trim().toLowerCase();
+  const idx = teamsByFPI.findIndex(t => t.toLowerCase() === clean);
+  return idx !== -1 ? idx : 9999;
+}
+
+function fillSample() {
+  if (!currentTeam || !games || games.length === 0) return;
+  const myRank = getFpiRank(currentTeam);
+  predictions = {};
+  games.forEach((g, i) => {
+    const oppRank = getFpiRank(g.opponent);
+    // Opponent with higher FPI (better rank / lower index) -> Predict Loss
+    // Opponent with lower FPI (worse rank / higher index) or FCS (9999) -> Predict Win
+    if (oppRank < myRank) {
+      predictions[i] = "L";
+    } else {
+      predictions[i] = "W";
+    }
+  });
+  renderGames();
+  updateRecord();
+  updateCapture();
+}
+
+function getLocPrefix(location) {
+  if (location === "H") return "vs ";
+  if (location === "A") return "@ ";
+  return ""; // neutral → nothing
+}
+
+function onlyDigits(el) {
+  el.value = el.value.replace(/\D/g, "").slice(0, 2);
+}
+
+async function onTeamChange() {
+  currentTeam = document.getElementById("teamSelect").value;
+  predictions = {};
+  scores = {};
+  games = [];
+
+  if (!currentTeam) {
+    document.getElementById("scheduleArea").style.display = "none";
+    document.getElementById("captureArea").style.display = "none";
+    document.getElementById("shareContainer").style.display = "none";
+    document.getElementById("titleEditWrap").style.display = "none";
+    const btnSample = document.getElementById("btnSample");
+    if (btnSample) btnSample.style.display = "none";
+    return;
+  }
+
+  document.getElementById("scheduleArea").style.display = "block";
+  document.getElementById("gameList").innerHTML = `<div style="text-align:center;color:#a1a1aa;padding:20px;">Loading schedule…</div>`;
+
+  try {
+    const res = await fetch(`/api/schedule?team=${encodeURIComponent(currentTeam)}`);
+    if (!res.ok) throw new Error("Failed to load schedule");
+    const data = await res.json();
+    games = data[currentTeam] || [];
+
+    if (games.length === 0) {
+      document.getElementById("gameList").innerHTML = `<div style="text-align:center;color:#f87171;padding:20px;">No schedule found for ${currentTeam}. Team name may not match CFBD data.</div>`;
+      document.getElementById("captureArea").style.display = "none";
+      document.getElementById("shareContainer").style.display = "none";
+      document.getElementById("titleEditWrap").style.display = "none";
+      const btnSample = document.getElementById("btnSample");
+      if (btnSample) btnSample.style.display = "none";
+      return;
+    }
+
+    renderGames();
+    updateRecord();
+    updateCapture();
+    const btnSample = document.getElementById("btnSample");
+    if (btnSample) btnSample.style.display = "inline-block";
+    document.getElementById("titleEditWrap").style.display = "block";
+    document.getElementById("captureArea").style.display = "block";
+    document.getElementById("shareContainer").style.display = "flex";
+  } catch (err) {
+    console.error(err);
+    document.getElementById("gameList").innerHTML = `<div style="text-align:center;color:#f87171;padding:20px;">Error loading schedule. Try again.</div>`;
+    document.getElementById("captureArea").style.display = "none";
+    document.getElementById("shareContainer").style.display = "none";
+    document.getElementById("titleEditWrap").style.display = "none";
+    const btnSample = document.getElementById("btnSample");
+    if (btnSample) btnSample.style.display = "none";
+  }
+}
+
+function renderGames() {
+  const list = document.getElementById("gameList");
+  list.innerHTML = "";
+
+  games.forEach((g, i) => {
+    const pred = predictions[i] || null;
+    const prefix = getLocPrefix(g.location);
+    const dateStr = formatDate(g.date);
+
+    let scoreLeft = "", scoreRight = "";
+    if (scores[i]) {
+      const parts = scores[i].split("-");
+      scoreLeft = parts[0] || "";
+      scoreRight = parts[1] || "";
+    }
+
+    const row = document.createElement("div");
+    row.className = "game-row";
+    row.innerHTML = `
+      <div class="game-date">${dateStr}</div>
+      <div class="pred-btns">
+        <button class="win ${pred === "W" ? "active" : ""}" onclick="setPred(${i}, 'W')">W</button>
+        <button class="loss ${pred === "L" ? "active" : ""}" onclick="setPred(${i}, 'L')">L</button>
+      </div>
+      ${showScores ? `
+        <div class="score-pair">
+          <input type="text" class="score-num" value="${scoreLeft}" maxlength="2" inputmode="numeric" 
+                 oninput="onlyDigits(this); updateScoreFromInputs(${i})" placeholder="0">
+          <span>-</span>
+          <input type="text" class="score-num" value="${scoreRight}" maxlength="2" inputmode="numeric" 
+                 oninput="onlyDigits(this); updateScoreFromInputs(${i})" placeholder="0">
+        </div>
+      ` : ""}
+      <div class="game-opp">${prefix}${g.opponent}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function updateScoreFromInputs(idx) {
+  const row = document.querySelectorAll(".game-row")[idx];
+  if (!row) return;
+  const inputs = row.querySelectorAll(".score-num");
+  if (inputs.length < 2) return;
+
+  const left = inputs[0].value;
+  const right = inputs[1].value;
+
+  if (left || right) {
+    scores[idx] = `${left || "0"}-${right || "0"}`;
+  } else {
+    delete scores[idx];
+  }
+  updateCapture();
+}
+
+function setPred(idx, result) {
+  if (predictions[idx] === result) {
+    delete predictions[idx];
+  } else {
+    predictions[idx] = result;
+  }
+  renderGames();
+  updateRecord();
+  updateCapture();
+}
+
+function toggleScores() {
+  showScores = !showScores;
+  document.getElementById("btnScores").classList.toggle("active", showScores);
+  renderGames();
+  updateCapture();
+}
+
+function updateRecord() {
+  let w = 0, l = 0;
+  Object.values(predictions).forEach(p => {
+    if (p === "W") w++;
+    if (p === "L") l++;
+  });
+  document.getElementById("recordBar").textContent = `${w}-${l}`;
+  document.getElementById("capRecord").textContent = `${w}-${l}`;
+}
+
+function updateCapture() {
+  const customTitle = document.getElementById("graphicTitleInput") ? document.getElementById("graphicTitleInput").value.trim() : "";
+  document.getElementById("capTitle").textContent = customTitle || "My Record Prediction";
+  document.getElementById("capTeam").textContent = currentTeam;
+
+  const container = document.getElementById("capGames");
+  container.innerHTML = "";
+
+  games.forEach((g, i) => {
+    const pred = predictions[i] || null;
+    const prefix = getLocPrefix(g.location);
+    const score = scores[i] || "";
+
+    const div = document.createElement("div");
+    div.className = "cap-game";
+    div.innerHTML = `
+      <div class="cap-result ${pred || "none"}">${pred || "–"}</div>
+      ${showScores && score ? `<div class="cap-score">${score}</div>` : ""}
+      <div class="cap-opp">${prefix}${g.opponent}</div>
+    `;
+    container.appendChild(div);
+  });
+  
+}
+
+function formatDate(iso) {
+  const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function resetPredictions() {
+  predictions = {};
+  scores = {};
+  renderGames();
+  updateRecord();
+  updateCapture();
+}
+
+function downloadSchedule() {
+  const area = document.getElementById("captureArea");
+  html2canvas(area, {
+    backgroundColor: "#0a0a0a",
+    scale: 2,
+    useCORS: true,
+    windowWidth: 1200,
+    windowHeight: area.scrollHeight + 200,
+    scrollY: -window.scrollY
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = `${currentTeam.replace(/\s+/g, "_")}_2026_Record.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+}
+
+async function shareSchedule() {
+  const btn = document.getElementById("btnShare");
+  btn.disabled = true;
+  btn.textContent = "Uploading…";
+
+  try {
+    const area = document.getElementById("captureArea");
+    const canvas = await html2canvas(area, {
+    backgroundColor: "#0a0a0a",
+    scale: 2,
+    useCORS: true,
+    windowWidth: 1200,
+    windowHeight: area.scrollHeight + 200,
+    scrollY: -window.scrollY
+  });
+
+    const targetWidth = Math.max(canvas.width, canvas.height * (1200 / 630));
+    const paddedCanvas = document.createElement("canvas");
+    paddedCanvas.width = targetWidth;
+    paddedCanvas.height = canvas.height;
+    const ctx = paddedCanvas.getContext("2d");
+    ctx.fillStyle = "#0a0a0a";
+    ctx.fillRect(0, 0, targetWidth, canvas.height);
+    const offsetX = (targetWidth - canvas.width) / 2;
+    ctx.drawImage(canvas, offsetX, 0);
+    const blob = await new Promise(r => paddedCanvas.toBlob(r, "image/png"));
+    const form = new FormData();
+    form.append("image", blob);
+
+    const uploadRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method: "POST",
+      body: form
+    });
+    const uploadData = await uploadRes.json();
+
+    if (!uploadData.success) throw new Error("ImgBB upload failed");
+
+    const imgUrl = uploadData.data.url;
+    const params = new URLSearchParams();
+    params.set("team", currentTeam);
+
+    const predStr = Object.entries(predictions)
+      .map(([i, r]) => `${i}${r}`)
+      .join(",");
+    if (predStr) params.set("p", predStr);
+
+    const scoreStr = Object.entries(scores)
+      .map(([i, s]) => `${i}:${encodeURIComponent(s)}`)
+      .join(",");
+    if (scoreStr) params.set("s", scoreStr);
+
+    if (showScores) params.set("scores", "1");
+
+    params.set("img_url", imgUrl.replace("https://i.ibb.co/", "").replace(".png", ""));
+
+    const shareLink = `${window.location.origin}/schedule.html?${params.toString()}`;
+
+    await navigator.clipboard.writeText(shareLink);
+
+    document.getElementById("shareSiteLink").value = shareLink;
+    document.getElementById("shareModal").style.display = "flex";
+
+    const toast = document.getElementById("toast");
+    toast.className = "show";
+    setTimeout(() => toast.className = "", 3000);
+  } catch (err) {
+    console.error(err);
+    alert("Share failed. Please try again.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Share to Social";
+  }
+}
+
+function restoreFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const team = params.get("team");
+  const predStr = params.get("p") || "";
+  const scoreStr = params.get("s") || "";
+  const scoresOn = params.get("scores") === "1";
+
+  if (team) {
+    document.getElementById("teamSelect").value = team;
+
+    if (scoresOn) {
+      showScores = true;
+      document.getElementById("btnScores").classList.add("active");
+    }
+
+    onTeamChange().then(() => {
+      if (predStr) {
+        predStr.split(",").forEach(part => {
+          if (part.length >= 2) {
+            const result = part.slice(-1);
+            const idx = parseInt(part.slice(0, -1), 10);
+            if (!isNaN(idx) && (result === "W" || result === "L")) {
+              predictions[idx] = result;
+            }
+          }
+        });
+      }
+
+      if (scoreStr) {
+        scoreStr.split(",").forEach(part => {
+          const [idxStr, ...rest] = part.split(":");
+          const idx = parseInt(idxStr, 10);
+          const val = decodeURIComponent(rest.join(":"));
+          if (!isNaN(idx) && val) scores[idx] = val;
+        });
+      }
+
+      renderGames();
+      updateRecord();
+      updateCapture();
+    });
+  }
+}
+
+populateTeamSelect();
+restoreFromURL();
+</script>
+<script type="module">
+  import { initAuth, loadFromProfile, saveToProfile } from './src/global-auth.js';
+  import { getCurrentCFBWeek } from './src/week-calculator.js';
+  
+  const cfbWeek = getCurrentCFBWeek();
+
+  let isInitialLoad = true;
+  initAuth(async (user) => {
+    if (user && isInitialLoad) {
+      isInitialLoad = false;
+      const urlParams = new URLSearchParams(window.location.search);
+      let loadId = urlParams.get('loadId');
+      
+      if (!loadId && !urlParams.has('t')) {
+         const safeWeek = cfbWeek.replace(/ /g, '_');
+         loadId = `schedule_${safeWeek}`;
+      }
+
+      if (loadId) {
+        const data = await loadFromProfile(loadId);
+        if (data && data.team) {
+            const docWeek = loadId.split('_').slice(1).join(' ').replace(/_/g, ' ') || cfbWeek;
+            document.getElementById("graphicTitleInput").value = `${docWeek} Prediction`;
+            document.getElementById("teamSelect").value = data.team;
+            await onTeamChange();
+            if (data.predictions) {
+                Object.assign(predictions, data.predictions);
+            }
+            renderGames();
+            updateRecord();
+            updateCapture();
+        }
+      }
+    }
+  });
+
+  document.getElementById("btnSave").addEventListener("click", () => {
+    if (!currentTeam) return;
+    saveToProfile("schedule", {
+      team: currentTeam,
+      predictions: predictions
+    });
+  });
+</script>
+</body>
+</html>

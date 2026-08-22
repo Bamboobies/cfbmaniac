@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1150">
+  <title>CFB Maniac | Leaderboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Graduate&family=Outfit:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      background-image: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+      background-size: 100% 100%;
+      background-attachment: fixed;
+      color: #ffffff;
+      padding: 20px 16px 50px;
+      min-height: 100vh;
+    }
+    .logo-link { text-decoration: none; display: flex; justify-content: center; align-items: center; margin-bottom: 2px; }
+    .cfb-logo { text-align: center; font-family: 'Graduate', 'Impact', sans-serif; font-size: 2.3rem; font-weight: 700; background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 4px 15px rgba(251,191,36,0.3); text-transform: uppercase; letter-spacing: -0.5px; }
+    .nav-bar { max-width: 1100px; margin: 25px auto 40px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .nav-link { padding: 10px 24px; color: #a1a1aa; text-decoration: none; font-weight: 600; font-size: 1.05rem; background: #141414; border: 1px solid #27272a; border-radius: 8px; transition: all 0.2s ease; }
+    .nav-link:hover { color: #fff; background: #27272a; border-color: #3f3f46; transform: translateY(-1px); }
+    
+    .container { max-width: 800px; margin: 0 auto; }
+    .header-box { text-align: center; margin-bottom: 30px; }
+    .header-box h2 { font-size: 2rem; margin-bottom: 15px; }
+
+    .tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+    .tab { padding: 12px 25px; border-radius: 8px; cursor: pointer; border: 1px solid #27272a; background: #141414; color: #a1a1aa; font-weight: 600; transition: all 0.2s; }
+    .tab.active { background: #fbbf24; color: #000; border-color: #fbbf24; }
+    .tab:hover:not(.active) { background: #27272a; color: #fff; }
+
+    .leaderboard-list { background: #141414; border: 1px solid #27272a; border-radius: 12px; padding: 0; margin-bottom: 30px; overflow: hidden; }
+    .leaderboard-row { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #27272a; transition: background 0.2s; cursor: pointer; }
+    .leaderboard-row:hover { background: #27272a; }
+    .leaderboard-row:last-child { border-bottom: none; }
+    
+    .rank { font-size: 1.5rem; font-weight: 700; color: #71717a; width: 60px; }
+    .rank-1 { color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+    .rank-2 { color: #e4e4e7; text-shadow: 0 0 10px rgba(228, 228, 231, 0.5); }
+    .rank-3 { color: #b45309; text-shadow: 0 0 10px rgba(180, 83, 9, 0.5); }
+    
+    .user-info { display: flex; align-items: center; flex: 1; gap: 15px; }
+    .user-info img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #3f3f46; }
+    .user-info .name { font-weight: 600; font-size: 1.1rem; }
+    .user-score { font-size: 1.2rem; font-weight: 700; color: #fbbf24; }
+
+    .my-rank-banner { background: #fbbf24; color: #000; border-radius: 8px; padding: 15px 20px; font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
+    
+    /* Modal styles */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: #141414; border: 1px solid #27272a; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; color: #fff; position: relative; }
+    .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; color: #a1a1aa; cursor: pointer; transition: color 0.2s; }
+    .close-modal:hover { color: #fff; }
+    .modal-header { text-align: center; margin-bottom: 25px; }
+    .modal-header img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fbbf24; margin-bottom: 10px; }
+    .modal-header h3 { font-size: 1.5rem; }
+    .modal-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+    .stat-box { background: #0a0a0a; border: 1px solid #27272a; border-radius: 8px; padding: 15px; text-align: center; }
+    .stat-label { color: #a1a1aa; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; color: #fbbf24; }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="logo-link"><h1 class="cfb-logo">CFB Maniac</h1></a>
+  
+  <div class="nav-bar">
+    <a href="index.html" class="nav-link">Top 25 Rankings</a>
+    <a href="conference.html" class="nav-link">Conference Standings</a>
+    <a href="predictions.html" class="nav-link">Weekly Predictions</a>
+    <a href="leaderboard.html" class="nav-link" style="color: #fbbf24; border-color: #fbbf24;">Leaderboard</a>
+  </div>
+
+  <div class="container">
+    <div class="header-box">
+      <h2>Predictions Leaderboard</h2>
+      <p style="color: #a1a1aa;">Compete to build the most accurate record.</p>
+    </div>
+
+    <div class="tabs">
+      <div id="tab-alltime" class="tab active" onclick="switchTab('alltime')">All-Time Rankings</div>
+      <div id="tab-season" class="tab" onclick="switchTab('season')">2026 Season</div>
+    </div>
+    
+    <div style="margin-bottom: 25px;">
+      <input type="text" id="search-input" placeholder="Search by username..." style="width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #27272a; background: #141414; color: #fff; font-size: 1rem; outline: none; transition: border-color 0.2s;">
+    </div>
+
+    <div id="my-rank-container" style="display: none;"></div>
+
+    <div class="leaderboard-list" id="leaderboard-container">
+      <div style="padding: 30px; text-align: center; color: #a1a1aa;">Loading...</div>
+    </div>
+  </div>
+
+  <!-- User Profile Modal -->
+  <div id="user-modal" class="modal-overlay">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">&times;</span>
+      <div class="modal-header">
+        <img id="modal-avatar" src="" alt="Avatar">
+        <h3 id="modal-name">User Name</h3>
+      </div>
+      <div class="modal-stats">
+        <div class="stat-box">
+          <div class="stat-label">ELO Rating</div>
+          <div class="stat-value" id="modal-elo">--</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Win Rate</div>
+          <div class="stat-value" id="modal-winrate">--%</div>
+        </div>
+        <div class="stat-box" id="modal-rank-box" style="display: none;">
+          <div class="stat-label">All-Time Rank</div>
+          <div class="stat-value" id="modal-rank">--</div>
+        </div>
+        <div class="stat-box" id="modal-season-rank-box" style="display: none;">
+          <div class="stat-label">Season Rank</div>
+          <div class="stat-value" id="modal-season-rank">--</div>
+        </div>
+      </div>
+      <div id="past-predictions-container" style="display: none; border-top: 1px solid #27272a; padding-top: 20px; margin-top: 10px;">
+        <h4 style="margin-bottom: 10px; color: #a1a1aa;">Past Predictions</h4>
+        <div id="past-predictions-list" style="font-size: 0.9rem; color: #71717a; text-align: center; background: #0a0a0a; padding: 15px; border-radius: 8px;">No past predictions yet. Check back after Week 0!</div>
+      </div>
+      <div id="saved-creations-container" style="display: none; border-top: 1px solid #27272a; padding-top: 20px; margin-top: 10px;">
+        <h4 style="margin-bottom: 10px; color: #a1a1aa;">Saved Creations</h4>
+        <div id="saved-creations-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+          <div style="color: #71717a; text-align: center; background: #0a0a0a; padding: 15px; border-radius: 8px; grid-column: span 2;">Loading saved items...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/leaderboard-init.js"></script>
+</body>
+</html>
