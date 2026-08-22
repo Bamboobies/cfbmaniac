@@ -536,3 +536,17 @@ if (generateGraphicBtn) {
     generateGraphicBtn.disabled = false;
   });
 }
+
+window.deleteSavedCreation = async function(docId) {
+  if (!currentUser) return;
+  if (!confirm("Are you sure you want to delete this from your profile?")) return;
+  
+  try {
+    await deleteDoc(doc(db, "users", currentUser.uid, "savedData", docId));
+    alert("Deleted successfully.");
+    window.location.reload();
+  } catch (e) {
+    console.error("Error deleting:", e);
+    alert("Failed to delete.");
+  }
+};

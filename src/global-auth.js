@@ -75,7 +75,7 @@ export function initAuth(onUserLoadCallback = null) {
 
 
 // Global Save function
-export async function saveToProfile(type, data, isAutoSave = false) {
+export async function saveToProfile(type, data, isAutoSave = false, customOptions = {}) {
   let user = window.currentUser;
   
   if (!user) {
@@ -96,17 +96,74 @@ export async function saveToProfile(type, data, isAutoSave = false) {
   if (!user) return;
   
   let activeWeek = getCurrentCFBWeek();
-  let safeWeek = activeWeek.replace(/ /g, '_');
-  
-  // If we are actively editing a past loaded item, preserve its week
-  const urlParams = new URLSearchParams(window.location.search);
-  const loadId = urlParams.get('loadId');
-  if (loadId && loadId.startsWith(type + "_")) {
-     safeWeek = loadId.substring(type.length + 1);
-     activeWeek = safeWeek.replace(/_/g, ' ');
+  let docId;
+
+  if (type === "player-rankings") {
+    const urlParams = new URLSearchParams(window.location.search);
+    const loadId = urlParams.get('loadId');
+    let title = customOptions.title;
+    
+    if (loadId && loadId.startsWith("player-rankings_")) {
+       docId = loadId;
+       if (!title) {
+          title = prompt("Update title for your player rankings?", activeWeek);
+          if (!title) return;
+       }
+    } else {
+       if (!title) {
+          title = prompt("Enter a title for your custom player rankings:", "My Player Rankings");
+          if (!title) return;
+       }
+       docId = `player-rankings_${Date.now()}`;
+    }
+    
+    // Limit to 10
+    try {
+       const { getDocs, query, collection, where } = await import("firebase/firestore");
+       const q = query(collection(db, "users", window.currentUser.uid, "savedData"), where("type", "==", "player-rankings"));
+       const snap = await getDocs(q);
+       const isExisting = snap.docs.find(d => d.id === docId);
+       if (!isExisting && snap.size >= 10) {
+          alert("You can only have up to 10 player rankings saved at once. Please delete an old one from your profile.");
+          return;
+       }
+    } catch(e) {
+       console.error("Error checking limits", e);
+    }
+    
+    activeWeek = title; // We store the title in the 'week' field for the dashboard
+  } else if (type === "schedule") {
+    if (activeWeek !== "Preseason") {
+        alert("Record predictions can only be saved during the preseason.");
+        return;
+    }
+    
+    // For schedule, use the team name in the week to display nicely on dashboard
+    const teamName = customOptions.team || "Team";
+    let safeTeam = teamName.replace(/ /g, '_');
+    
+    // If we are actively editing a past loaded item, preserve it
+    const urlParams = new URLSearchParams(window.location.search);
+    const loadId = urlParams.get('loadId');
+    if (loadId && loadId.startsWith(type + "_")) {
+       safeTeam = loadId.substring(type.length + 1);
+    }
+    
+    docId = `${type}_${safeTeam}`;
+    activeWeek = `2026 ${teamName}`; // Storing formatted title in week field
+  } else {
+    let safeWeek = activeWeek.replace(/ /g, '_');
+    
+    // If we are actively editing a past loaded item, preserve its week
+    const urlParams = new URLSearchParams(window.location.search);
+    const loadId = urlParams.get('loadId');
+    if (loadId && loadId.startsWith(type + "_")) {
+       safeWeek = loadId.substring(type.length + 1);
+       activeWeek = safeWeek.replace(/_/g, ' ');
+    }
+    
+    docId = `${type}_${safeWeek}`;
   }
-  
-  const docId = `${type}_${safeWeek}`;
   
   try {
     const docRef = doc(db, "users", window.currentUser.uid, "savedData", docId);
@@ -116,6 +173,7 @@ export async function saveToProfile(type, data, isAutoSave = false) {
       week: activeWeek,
       data: data
     });
+    
     if (!isAutoSave) {
       alert("Successfully saved to your profile!");
     }
@@ -141,3 +199,19 @@ export async function loadFromProfile(docId) {
   return null;
 }
 window.loadFromProfile = loadFromProfile;
+
+window.deleteSavedCreation = async function(docId) {
+  if (!window.currentUser) return;
+  if (!confirm("Are you sure you want to delete this from your profile?")) return;
+  
+  try {
+    const { doc, deleteDoc } = await import("firebase/firestore");
+    const docRef = doc(db, "users", window.currentUser.uid, "savedData", docId);
+    await deleteDoc(docRef);
+    alert("Deleted successfully.");
+    window.location.reload();
+  } catch (e) {
+    console.error("Error deleting:", e);
+    alert("Failed to delete.");
+  }
+};

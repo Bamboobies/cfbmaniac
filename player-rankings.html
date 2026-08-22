@@ -1067,6 +1067,11 @@ init();
       }
 
       if (loadId) {
+        if (loadId.startsWith("awards")) {
+           setMode("awards");
+        } else if (loadId.startsWith("player-rankings")) {
+           setMode("rankings");
+        }
         const data = await loadFromProfile(loadId);
         if (data && data.rankings) {
             const docWeek = loadId.split('_').slice(1).join(' ').replace(/_/g, ' ') || cfbWeek;
@@ -1081,9 +1086,11 @@ init();
   });
 
   document.getElementById("btnSave").addEventListener("click", () => {
-    saveToProfile("player-rankings", {
-      rankings: rankings
-    });
+        if (currentMode === "awards") {
+      saveToProfile("awards", { rankings: rankings });
+    } else {
+      saveToProfile("player-rankings", { rankings: rankings });
+    }
   });
 </script>
 </body>

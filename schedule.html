@@ -926,10 +926,7 @@ restoreFromURL();
 
   document.getElementById("btnSave").addEventListener("click", () => {
     if (!currentTeam) return;
-    saveToProfile("schedule", {
-      team: currentTeam,
-      predictions: predictions
-    });
+    saveToProfile("schedule", { team: currentTeam, predictions: predictions }, false, { team: currentTeam });
   });
 </script>
 </body>

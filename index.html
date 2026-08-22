@@ -1402,6 +1402,12 @@ checkCompletion();
                    if (typeof applyTeamColor === 'function') {
                      applyTeamColor(el.parentElement, isEmpty ? "" : teamName);
                    }
+                   if (slot !== 'champ' && !isEmpty) {
+                       const seedEl = el.parentElement.querySelector(".seed-num");
+                       if (seedEl && teamSeedMap[teamName]) {
+                           seedEl.textContent = teamSeedMap[teamName];
+                       }
+                   }
                    if (slot === 'champ' && !isEmpty) {
                        document.getElementById("champWrapper").style.display = "flex";
                    }
