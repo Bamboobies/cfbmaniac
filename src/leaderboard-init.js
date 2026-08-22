@@ -1,4 +1,4 @@
-import { auth, onAuthStateChanged, db, collection, query, orderBy, limit, getDocs } from "./firebase.js";
+import { auth, onAuthStateChanged, db, collection, query, orderBy, limit, getDocs, deleteDoc, doc } from "./firebase.js";
 
 let currentUser = null;
 let currentMode = 'alltime'; // or 'season'
@@ -89,11 +89,15 @@ window.openUserProfile = function(userIndex) {
         return;
       }
       
-      savedList.innerHTML = "";
-      savedSnap.forEach(doc => {
-        const data = doc.data();
-        const docType = data.type || doc.id.split('_')[0];
-        const docWeek = data.week || doc.id.split('_').slice(1).join(' ') || "Unknown Week";
+            savedList.innerHTML = "";
+      for (const documentSnap of savedSnap.docs) {
+        const data = documentSnap.data();
+        if (!data.week) {
+           await deleteDoc(doc(db, "users", currentUser.uid, "savedData", documentSnap.id));
+           continue;
+        }
+        const docType = data.type || documentSnap.id.split('_')[0];
+        const docWeek = data.week;
         const d = new Date(data.updatedAt);
         const dateStr = d.toLocaleDateString([], {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
         
@@ -106,10 +110,10 @@ window.openUserProfile = function(userIndex) {
         
         const fullTitle = `${docWeek} ${title}`;
         
-        let url = `/index.html?loadId=${doc.id}`;
-        if (docType === "conference") url = `/conference.html?loadId=${doc.id}`;
-        if (docType === "schedule") url = `/schedule.html?loadId=${doc.id}`;
-        if (docType === "player-rankings") url = `/player-rankings.html?loadId=${doc.id}`;
+        let url = `/index.html?loadId=${documentSnap.id}`;
+        if (docType === "conference") url = `/conference.html?loadId=${documentSnap.id}`;
+        if (docType === "schedule") url = `/schedule.html?loadId=${documentSnap.id}`;
+        if (docType === "player-rankings") url = `/player-rankings.html?loadId=${documentSnap.id}`;
         
         savedList.innerHTML += `
           <a href="${url}" style="text-decoration: none; display: block; background: #18181b; border: 1px solid #3f3f46; border-radius: 6px; padding: 12px; transition: 0.2s; cursor: pointer;" onmouseover="this.style.borderColor='#fbbf24'" onmouseout="this.style.borderColor='#3f3f46'">
@@ -117,7 +121,8 @@ window.openUserProfile = function(userIndex) {
             <div style="color: #a1a1aa; font-size: 0.75rem;">Updated: ${dateStr}</div>
           </a>
         `;
-      });
+      }
+
     });
 
   } else {

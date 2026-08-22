@@ -1394,9 +1394,17 @@ checkCompletion();
              if (data.picks) {
                Object.keys(data.picks).forEach(slot => {
                  const el = document.getElementById(slot === 'champ' ? 'champName' : 'name-'+slot);
-                 if (el) el.textContent = data.picks[slot] || "—";
-                 if (slot === 'champ' && data.picks[slot] && data.picks[slot] !== "—") {
-                     document.getElementById("champWrapper").style.display = "flex";
+                 if (el) {
+                   const teamName = data.picks[slot] || "—";
+                   el.textContent = teamName;
+                   const isEmpty = !teamName || teamName === "—";
+                   el.classList.toggle("empty", isEmpty);
+                   if (typeof applyTeamColor === 'function') {
+                     applyTeamColor(el.parentElement, isEmpty ? "" : teamName);
+                   }
+                   if (slot === 'champ' && !isEmpty) {
+                       document.getElementById("champWrapper").style.display = "flex";
+                   }
                  }
                });
              }

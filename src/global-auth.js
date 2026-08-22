@@ -109,7 +109,7 @@ export async function saveToProfile(type, data, isAutoSave = false) {
   const docId = `${type}_${safeWeek}`;
   
   try {
-    const docRef = doc(db, "users", user.uid, "savedData", docId);
+    const docRef = doc(db, "users", window.currentUser.uid, "savedData", docId);
     await setDoc(docRef, {
       updatedAt: new Date().toISOString(),
       type: type,
@@ -130,7 +130,7 @@ export async function saveToProfile(type, data, isAutoSave = false) {
 export async function loadFromProfile(docId) {
   if (!window.currentUser) return null;
   try {
-    const docRef = doc(db, "users", user.uid, "savedData", docId);
+    const docRef = doc(db, "users", window.currentUser.uid, "savedData", docId);
     const snap = await getDoc(docRef);
     if (snap.exists()) {
       return snap.data().data;
