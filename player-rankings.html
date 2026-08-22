@@ -1075,8 +1075,13 @@ init();
         const data = await loadFromProfile(loadId);
         if (data && data.rankings) {
             const docWeek = loadId.split('_').slice(1).join(' ').replace(/_/g, ' ') || cfbWeek;
-            document.getElementById("graphicTitleInput").value = `${docWeek} Player Rankings`;
-            document.getElementById("capTitle").textContent = `${docWeek} Player Rankings`;
+            if (currentMode === 'awards') {
+                document.getElementById("graphicTitleInput").value = `${docWeek} Award Predictions`;
+                document.getElementById("capTitle").textContent = `${docWeek} Award Predictions`;
+            } else {
+                document.getElementById("graphicTitleInput").value = docWeek;
+                document.getElementById("capTitle").textContent = docWeek;
+            }
             Object.assign(rankings, data.rankings);
             if (currentMode === 'rankings') {
                 const maxKey = Math.max(...Object.keys(data.rankings).map(Number).filter(n => !isNaN(n)));

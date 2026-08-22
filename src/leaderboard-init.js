@@ -108,7 +108,11 @@ window.openUserProfile = function(userIndex) {
         if (docType === "conference") title = "Conference Rankings";
         if (docType === "schedule") title = "Record Predictor";
         
-        const fullTitle = `${docWeek} ${title}`;
+        
+        let fullTitle = `${docWeek} ${title}`;
+        if (docType === "player-rankings") fullTitle = docWeek;
+        if (docType === "awards") fullTitle = `${docWeek} Award Predictions`;
+
         
         let url = `/index.html?loadId=${documentSnap.id}`;
         if (docType === "conference") url = `/conference.html?loadId=${documentSnap.id}`;

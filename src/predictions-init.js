@@ -162,12 +162,16 @@ window.openUserProfile = async function() {
           if (docType === "conference") title = "Conference Rankings";
           if (docType === "schedule") title = "Record Predictor";
           
-          const fullTitle = `${docWeek} ${title}`;
+          
+        let fullTitle = `${docWeek} ${title}`;
+        if (docType === "player-rankings") fullTitle = docWeek;
+        if (docType === "awards") fullTitle = `${docWeek} Award Predictions`;
+
           
           let url = `/index.html?loadId=${documentSnap.id}`;
           if (docType === "conference") url = `/conference.html?loadId=${documentSnap.id}`;
           if (docType === "schedule") url = `/schedule.html?loadId=${documentSnap.id}`;
-          if (docType === "player-rankings") url = `/player-rankings.html?loadId=${documentSnap.id}`;
+          if (docType === "player-rankings" || docType === "awards") url = `/player-rankings.html?loadId=${documentSnap.id}`;
           
           savedList.innerHTML += `
             <a href="${url}" style="text-decoration: none; display: block; background: #18181b; border: 1px solid #3f3f46; border-radius: 6px; padding: 12px; transition: 0.2s; cursor: pointer;" onmouseover="this.style.borderColor='#fbbf24'" onmouseout="this.style.borderColor='#3f3f46'">

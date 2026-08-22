@@ -1391,7 +1391,7 @@ checkCompletion();
                  if (sel) sel.value = seeds[i];
                }
              }
-             if (data.picks) {
+                          if (data.picks) {
                Object.keys(data.picks).forEach(slot => {
                  const el = document.getElementById(slot === 'champ' ? 'champName' : 'name-'+slot);
                  if (el) {
@@ -1416,6 +1416,22 @@ checkCompletion();
              }
              populateAllSeedSelects();
              updateBracketDisplay();
+             
+             // Restore winner classes
+             if (data.picks) {
+                 document.querySelectorAll('.matchup').forEach(matchup => {
+                     const nextSlot = matchup.dataset.next;
+                     if (!nextSlot) return;
+                     const nextTeam = data.picks[nextSlot];
+                     if (nextTeam && nextTeam !== "—") {
+                         matchup.querySelectorAll('.team-row').forEach(row => {
+                             if (row.querySelector('.team-name').textContent === nextTeam) {
+                                 row.classList.add('winner');
+                             }
+                         });
+                     }
+                 });
+             }
              checkCompletion();
            } else if (loadId.startsWith('top25')) {
              for (let i = 1; i <= 25; i++) {
